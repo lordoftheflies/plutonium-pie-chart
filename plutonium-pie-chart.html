@@ -1,0 +1,193 @@
+<link rel="import" href="../polymer/polymer.html">
+<script src="../d3/d3.js"></script>
+
+<dom-module id="plutonium-pie-chart">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <svg id="canvas"></svg>
+    </template>
+    <script>
+        Polymer({
+            is: 'plutonium-pie-chart',
+            behaviors: [
+            ],
+//            extends: 'svg',
+            properties: {
+                _radius: {
+                    type: Number,
+                    notify: true,
+//                    computed: 'computeRadius(width, height)'
+                },
+                _palette: {
+                    type: Object,
+                    notify: true
+                },
+                _arc: {
+                    type: Object,
+                    notify: true
+                },
+                _labelArc: {
+                    type: Object,
+                    notify: true
+                },
+                _pie: {
+                    type: Object,
+                    notify: true
+                },
+                items: {
+                    type: Array,
+                    notify: true,
+//                    observer: 'observeItems',
+                    value: ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]
+                },
+                dataUrl: {
+                    type: String,
+                    notify: true
+                },
+                data: {
+                    type: Object,
+                    notify: true
+                },
+                width: {
+                    type: Number,
+                    value: 100,
+                    reflectToAttribute: true,
+                    notify: true
+                },
+                height: {
+                    type: Number,
+                    value: 100,
+                    reflectToAttribute: true,
+                    notify: true
+                }
+            },
+            observers: [
+//                'observeArc(_radius)',
+//                'observeData(data)',
+//                'observeDataUrl(dataUrl)'
+            ],
+            ready: function () {
+                console.log('Ready');
+
+
+                var width = 960,
+                        height = 500,
+                        radius = Math.min(width, height) / 2;
+
+                var color = d3.scale.ordinal()
+                        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+                var arc = d3.svg.arc()
+                        .outerRadius(radius - 10)
+                        .innerRadius(0);
+
+                var labelArc = d3.svg.arc()
+                        .outerRadius(radius - 40)
+                        .innerRadius(radius - 40);
+
+                var pie = d3.layout.pie()
+                        .sort(null)
+                        .value(function (d) {
+                            return d.population;
+                        });
+
+//                var svg = this
+//                var svg = d3.select("#canvas")
+                var svg = d3.select(this.$.canvas)
+//                var svg = d3.select(this).append("svg")
+//                var svg = d3.select("svg")
+                        .attr("width", width)
+                        .attr("height", height)
+                        .append("g")
+                        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+                d3.json("data.json", function (error, data) {
+                    if (error)
+                        throw error;
+
+                    var g = svg.selectAll(".arc")
+                            .data(pie(data))
+                            .enter().append("g")
+                            .attr("class", "arc");
+
+                    g.append("path")
+                            .attr("d", arc)
+                            .style("fill", function (d) {
+                                return color(d.data.age);
+                            });
+
+                    g.append("text")
+                            .attr("transform", function (d) {
+                                return "translate(" + labelArc.centroid(d) + ")";
+                            })
+                            .attr("dy", ".35em")
+                            .text(function (d) {
+                                return d.data.age;
+                            });
+                });
+
+                function type(d) {
+                    d.population = +d.population;
+                    return d;
+                }
+
+//                this._pie = d3.layout.pie()
+//                        .sort(null)
+//                        .value(function (d) {
+//                            return d.population;
+//                        });
+            },
+//            computeRadius: function (width, height) {
+//                return Math.min(width, height) / 2;
+//            },
+//            observeArc: function (_radius) {
+//                this._arc = d3.svg.arc().outerRadius(this._radius - 10).innerRadius(0);
+//                this._labelArc = d3.svg.arc().outerRadius(this._radius - 40).innerRadius(this._radius - 40);
+////                console.log('Observe arc: ' + this._arc);
+////                console.log('Observe label-arc: ' + this._labelArc);
+//            },
+//            observeItems: function (items) {
+//                this._palette = d3.scale.ordinal().range(items);
+////                console.log('Observe items: ' + this.items);
+//            },
+//            observeDataUrl: function(dataUrl) {
+//                this.observeData(this.items);
+//            },
+//            observeData: function (items) {
+//                var self = this;
+//
+//                
+//                var type = function (d) {
+//                    d.population = +d.population;
+//                    return d;
+//                };
+//
+//                d3.json(this.dataUrl, function (error, data) {
+//                    if (error)
+//                        throw error;
+//
+////                    var g = Polymer.selectAll(".arc").data(pie(data)).enter().append("g").attr("class", "arc");
+////                    var g = Polymer.dom(self).querySelectorAll(".arc")
+//                    var g = Polymer.dom(self).querySelectorAll(".arc")
+//                            .data(self._pie(data)).enter().append("g").attr("class", "arc");
+//
+//                    g.append("path").attr("d", self._arc).style("fill", function (d) {
+//                        return color(d.data.age);
+//                    });
+//
+//                    g.append("text").attr("transform", function (d) {
+//                        return "translate(" + self._labelArc.centroid(d) + ")";
+//                    }).attr("dy", ".35em").text(function (d) {
+//                        return d.data.age;
+//                    });
+//                });
+//
+////                console.log('Observe data: ' + this.data);
+//            }
+        });
+    </script>
+</dom-module>
