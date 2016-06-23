@@ -1,0 +1,25 @@
+{
+    "elements": {
+        "demo-snippet": {},
+        "template": {},
+        "plutonium-pie-chart": {},
+        "dom-module": {
+            "attributes": {
+                "id": {}
+            }
+        },
+        "iron-component-page": {
+            "attributes": {
+                "src": {}
+            }
+        }
+    },
+    "attributes": {
+        "include": {
+            "context": "style"
+        },
+        "is": {
+            "context": "svg"
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "plutonium-pie-chart",
+  "description": "D3-based pie chart component.",
+  "main": "plutonium-pie-chart.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "d3": "^3.5.17"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/lordoftheflies/plutonium-pie-chart",
+  "_release": "9ca614b491",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "9ca614b49166195669e3c2eeddd7ec14cde50764"
+  },
+  "_source": "git://github.com/lordoftheflies/plutonium-pie-chart.git",
+  "_target": "master",
+  "_originalSource": "lordoftheflies/plutonium-pie-chart",
+  "_direct": true
+}
