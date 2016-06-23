@@ -3,7 +3,8 @@
   "description": "D3-based pie chart component.",
   "main": "plutonium-pie-chart.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.4.0"
+    "polymer": "Polymer/polymer#^1.4.0",
+    "d3": "^3.5.17"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
