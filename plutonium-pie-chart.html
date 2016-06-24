@@ -13,63 +13,140 @@
         </svg>
     </template>
     <script>
+        /**
+         * `<plutonium-pie-chart>` is a D3 based svg chart.
+         *
+         * In typical use, just slap some `<plutonium-pie-chart>`:
+         *
+         *     <plutonium-pie-chart 
+         *     width="300" 
+         *     height="300" 
+         *     attr-for-label="age" 
+         *     attr-for-selected="population" 
+         *     data-url="./data.json">
+         *     </plutonium-pie-chart>
+         *
+         * Plutonium visualization elements always working with JSON and plain JS.
+         * 
+         * @hero hero
+         * @demo demo/index.html  Super cool demo, with sharks!
+         */
+
         Polymer({
             is: 'plutonium-pie-chart',
             behaviors: [
             ],
 //            extends: 'svg',
             properties: {
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 _radius: {
                     type: Number,
-                    notify: true,
-//                    computed: 'computeRadius(width, height)'
+                    notify: true
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 _palette: {
                     type: Object,
                     notify: true
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 _arc: {
                     type: Object,
                     notify: true
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 _labelArc: {
                     type: Object,
                     notify: true
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 _pie: {
                     type: Object,
                     notify: true
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 attrForSelected: {
                     type: String,
                     notify: true,
                     value: 'value'
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 attrForLabel: {
                     type: String,
                     notify: true,
                     value: 'name'
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 items: {
                     type: Array,
                     notify: true,
-//                    observer: 'observeItems',
                     value: ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 dataUrl: {
                     type: String,
                     notify: true
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 data: {
                     type: Object,
                     notify: true
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 width: {
                     type: Number,
                     value: 100,
                     reflectToAttribute: true,
                     notify: true
                 },
+                /**
+                 * Metadata describing what has been made awesome on the page.
+                 *
+                 * @type {{elements: Array<HTMLElement>, level: number}}
+                 */
                 height: {
                     type: Number,
                     value: 100,
@@ -84,6 +161,16 @@
                 'observeData(attrForLabel, _pie, data)',
                 'observeLayout(attrForSelected)'
             ],
+            /**
+             * Applies awesomeness to `element`.
+             *
+             * @param {HTMLElement} element The element to be made awesome.
+             * @param {number} level The numeric level of awesomeness. A value
+             *     between `1` and `11`.
+             * @param {Array<HTMLElements>=} refs Optional referenced elements
+             *     that become awesome by proxy.
+             * @return {number} The cumulative level of awesomeness.
+             */
             observeLayout: function (attrForSelected) {
                 var self = this;
                 // Pie visualization.
@@ -93,6 +180,16 @@
                             return d[self.attrForSelected];
                         });
             },
+            /**
+             * Applies awesomeness to `element`.
+             *
+             * @param {HTMLElement} element The element to be made awesome.
+             * @param {number} level The numeric level of awesomeness. A value
+             *     between `1` and `11`.
+             * @param {Array<HTMLElements>=} refs Optional referenced elements
+             *     that become awesome by proxy.
+             * @return {number} The cumulative level of awesomeness.
+             */
             observeSize: function (width, height) {
                 // Calculate radius,
                 this._radius = Math.min(width, height) / 2;
@@ -106,10 +203,30 @@
                 d3.select(this.$.transformer).attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
             },
+            /**
+             * Applies awesomeness to `element`.
+             *
+             * @param {HTMLElement} element The element to be made awesome.
+             * @param {number} level The numeric level of awesomeness. A value
+             *     between `1` and `11`.
+             * @param {Array<HTMLElements>=} refs Optional referenced elements
+             *     that become awesome by proxy.
+             * @return {number} The cumulative level of awesomeness.
+             */
             observeItems: function (items) {
                 // Create color palette for the items.
                 this._palette = d3.scale.ordinal().range(items);
             },
+            /**
+             * Applies awesomeness to `element`.
+             *
+             * @param {HTMLElement} element The element to be made awesome.
+             * @param {number} level The numeric level of awesomeness. A value
+             *     between `1` and `11`.
+             * @param {Array<HTMLElements>=} refs Optional referenced elements
+             *     that become awesome by proxy.
+             * @return {number} The cumulative level of awesomeness.
+             */
             observeDataUrl: function (attrForLabel, _pie, dataUrl) {
                 var self = this;
 
@@ -132,6 +249,13 @@
                     });
                 });
             },
+            /**
+             * Observe `data` object..
+             *
+             * @param {string} Label expression.
+             * @param {function} Function to generate D3 layout.
+             * @param {Object} Model object.
+             */
             observeData: function (attrForLabel, pie, data) {
                 var self = this;
 
