@@ -65,6 +65,7 @@
                 'observeValue(value)'
             ],
             behaviors: [
+                PlutoniumVisualization.FetchUniversalBehavior
 //                PlutoniumVisualization.JsonModelBehavior,
 //                PlutoniumVisualization.ObjectModelBehavior,
 //                PlutoniumVisualization.PresentationBehavior
@@ -125,14 +126,6 @@
                 d3.select(this.$.transformer)
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
             },
-            postProcess: function (data) {
-                var self = this;
-                data.forEach(function (d) {
-                    d.date = self._parseDate(d.date);
-                    d.close = +d.close;
-                });
-                return data;
-            },
             onRenderArea: function (event, detail) {
                 console.log(this.is, 'render as area');
 
@@ -157,7 +150,12 @@
                 g.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + this._height + ")")
-                        .call(this._xAxis);
+                        .call(this._xAxis)
+                        .append("text")
+                        .attr("y", 12)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "right")
+                        .text("Price22222 ($)");
 
                 g.append("g")
                         .attr("class", "y axis")
@@ -168,8 +166,16 @@
                         .attr("dy", ".71em")
                         .style("text-anchor", "end")
                         .text("Price ($)");
+            },
+            postProcess: function (data) {
+                var self = this;
+                data.forEach(function (d) {
+                    d.date = self._parseDate(d.date);
+                    d.close = +d.close;
+                });
+                return data;
             }
-            
+
         });
     </script>
 </dom-module>
