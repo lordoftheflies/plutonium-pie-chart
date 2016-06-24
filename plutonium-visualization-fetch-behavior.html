@@ -12,8 +12,25 @@
      * @polymerBehavior
      */
     PlutoniumVisualization.FetchBehavior = {
+        properties: {
+            loading: {
+                type: Boolean,
+                notify: true,
+                value: false
+            }
+        },
+        listeners: {
+            'pv-fetch-start': 'onFetchStart',
+            'pv-fetch-end': 'onFetchEnd'
+        },
         postProcess: function (data) {
             return data;
+        },
+        onFetchStart: function () {
+            this.loading = true;
+        },
+        onFetchEnd: function () {
+            this.loading = false;
         }
     };
     /**

@@ -3,6 +3,8 @@
 
 <link rel="import" href="plutonium-visualization-presentation-behavior.html">
 <link rel="import" href="plutonium-visualization-object-model-behavior.html">
+<link rel="import" href="plutonium-visualization-fetch-behavior.html">
+<link rel="import" href="../paper-spinner/paper-spinner-lite.html">
 <dom-module id="plutonium-chart">
     <template>
         <style>
@@ -10,284 +12,50 @@
                 display: block;
             }
         </style>
-        <svg id="canvas">
+        <content></content>
+        <svg id="canvas" hidden="[[computeDisplay(loading, value)]]">
         <g id="transformer"></g>
         </svg>
+        <p>{{value}}</p>
+        <paper-spinner-lite alt="Loading data" active="[[loading]]"></paper-spinner-lite>
     </template>
     <script>
-        /**
-         * `<plutonium-chart>` is a D3 based svg chart.
-         *
-         * In typical use, just slap some `<plutonium-chart>`:
-         *
-         *     <plutonium-chart 
-         *     width="300" 
-         *     height="300" 
-         *     attr-for-label="age" 
-         *     attr-for-selected="population" 
-         *     data-url="./data.json">
-         *     </plutonium-chart>
-         *
-         * Plutonium visualization elements always working with JSON and plain JS.
-         * 
-         * @hero hero
-         * @demo demo/index-plutonium-chart.html  Super cool demo, with sharks!
-         */
+/**
+ * `<plutonium-chart>` is a D3 based svg chart.
+ *
+ * In typical use, just slap some `<plutonium-chart>`:
+ *
+ *     <plutonium-chart 
+ *     width="300" 
+ *     height="300" 
+ *     attr-for-label="age" 
+ *     attr-for-selected="population" 
+ *     data-url="./data.json">
+ *     </plutonium-chart>
+ *
+ * Plutonium visualization elements always working with JSON and plain JS.
+ * 
+ * @hero hero
+ * @demo demo/index-plutonium-chart.html  Super cool demo, with sharks!
+ */
 
-        Polymer({
-            is: 'plutonium-chart',
-            behaviors: [
-                PlutoniumVisualization.JsonModelBehavior,
-                PlutoniumVisualization.ObjectModelBehavior,
-                PlutoniumVisualization.PresentationBehavior
-            ],
+Polymer({
+    is: 'plutonium-chart',
+    behaviors: [
+        PlutoniumVisualization.FetchUniversalBehavior,
+        PlutoniumVisualization.PresentationBehavior
+    ],
 //            extends: 'svg',
-            properties: {
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                _radius: {
-                    type: Number,
-                    notify: true
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                _palette: {
-                    type: Object,
-                    notify: true
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                _arc: {
-                    type: Object,
-                    notify: true
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                _labelArc: {
-                    type: Object,
-                    notify: true
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                _pie: {
-                    type: Object,
-                    notify: true
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                attrForSelected: {
-                    type: String,
-                    notify: true,
-                    value: 'value'
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                attrForLabel: {
-                    type: String,
-                    notify: true,
-                    value: 'name'
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                dataUrl: {
-                    type: String,
-                    notify: true
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                data: {
-                    type: Object,
-                    notify: true
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                width: {
-                    type: Number,
-                    value: 100,
-                    reflectToAttribute: true,
-                    notify: true
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                height: {
-                    type: Number,
-                    value: 100,
-                    reflectToAttribute: true,
-                    notify: true
-                }
-            },
-            observers: [
-                'observeSize(width, height)',
-                'observeItems(items)',
-                'observeDataUrl(attrForLabel, _pie, dataUrl)',
-                'observeData(attrForLabel, _pie, data)',
-                'observeLayout(attrForSelected)'
-            ],
-            /**
-             * Applies awesomeness to `element`.
-             *
-             * @param {HTMLElement} element The element to be made awesome.
-             * @param {number} level The numeric level of awesomeness. A value
-             *     between `1` and `11`.
-             * @param {Array<HTMLElements>=} refs Optional referenced elements
-             *     that become awesome by proxy.
-             * @return {number} The cumulative level of awesomeness.
-             */
-            observeLayout: function (attrForSelected) {
-                var self = this;
-                // Pie visualization.
-                this._pie = d3.layout.pie()
-                        .sort(null)
-                        .value(function (d) {
-                            return d[self.attrForSelected];
-                        });
-            },
-            /**
-             * Applies awesomeness to `element`.
-             *
-             * @param {HTMLElement} element The element to be made awesome.
-             * @param {number} level The numeric level of awesomeness. A value
-             *     between `1` and `11`.
-             * @param {Array<HTMLElements>=} refs Optional referenced elements
-             *     that become awesome by proxy.
-             * @return {number} The cumulative level of awesomeness.
-             */
-            observeSize: function (width, height) {
-                // Calculate radius,
-                this._radius = Math.min(width, height) / 2;
-                // Create arc function
-                this._arc = d3.svg.arc().outerRadius(this._radius - 10).innerRadius(0);
-                // reate arc function for labels
-                this._labelArc = d3.svg.arc().outerRadius(this._radius - 40).innerRadius(this._radius - 40);
-                // Synchronize svg size.
-                d3.select(this.$.canvas).attr("width", width).attr("height", height)
-                // Translate graphics into content. 
-                d3.select(this.$.transformer).attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-            },
-            /**
-             * Applies awesomeness to `element`.
-             *
-             * @param {HTMLElement} element The element to be made awesome.
-             * @param {number} level The numeric level of awesomeness. A value
-             *     between `1` and `11`.
-             * @param {Array<HTMLElements>=} refs Optional referenced elements
-             *     that become awesome by proxy.
-             * @return {number} The cumulative level of awesomeness.
-             */
-            observeItems: function (items) {
-                // Create color palette for the items.
-                this._palette = d3.scale.ordinal().range(items);
-            },
-            /**
-             * Applies awesomeness to `element`.
-             *
-             * @param {HTMLElement} element The element to be made awesome.
-             * @param {number} level The numeric level of awesomeness. A value
-             *     between `1` and `11`.
-             * @param {Array<HTMLElements>=} refs Optional referenced elements
-             *     that become awesome by proxy.
-             * @return {number} The cumulative level of awesomeness.
-             */
-            observeDataUrl: function (attrForLabel, _pie, dataUrl) {
-                var self = this;
-
-                d3.json(dataUrl, function (error, data) {
-                    if (error)
-                        throw error;
-                    var g = d3.select(self.$.transformer).selectAll(".arc")
-                            .data(self._pie(data))
-                            .enter().append("g")
-                            .attr("class", "arc");
-
-                    g.append("path").attr("d", self._arc).style("fill", function (d) {
-                        return self._palette(d.data[self.attrForLabel]);
-                    });
-
-                    g.append("text").attr("transform", function (d) {
-                        return "translate(" + self._labelArc.centroid(d) + ")";
-                    }).attr("dy", ".35em").text(function (d) {
-                        return d.data[self.attrForLabel];
-                    });
-                });
-            },
-            /**
-             * Observe `data` object..
-             *
-             * @param {string} Label expression.
-             * @param {function} Function to generate D3 layout.
-             * @param {Object} Model object.
-             */
-            observeData: function (attrForLabel, pie, data) {
-                var self = this;
-
-                var g = d3.select(self.$.transformer).selectAll(".arc")
-                        .data(self._pie(data))
-                        .enter().append("g")
-                        .attr("class", "arc");
-
-                g.append("path").attr("d", self._arc).style("fill", function (d) {
-                    return self._palette(d.data[self.attrForLabel]);
-                });
-
-                g.append("text").attr("transform", function (d) {
-                    return "translate(" + self._labelArc.centroid(d) + ")";
-                }).attr("dy", ".35em").text(function (d) {
-                    return d.data[self.attrForLabel];
-                });
-
-            }
-        });
+    properties: {
+        display: {
+            type: Boolean,
+            computed: 'computeDisplay(loading, value)'
+        }
+    },
+    computeDisplay: function(loading, value) {
+        console.log('Display: ', !loading && (value !== undefined || value === null));
+        return !(!loading && (value !== undefined || value === null));
+    }
+});
     </script>
 </dom-module>

@@ -20,6 +20,9 @@
         },
         observeCsv: function (csvUrl) {
             console.log(this.is, 'observe csv.');
+            this.fire('pv-fetch-start', {
+                url: csvUrl
+            });
             this.fire('pv-fetch-csv', {
                 url: csvUrl
             });
@@ -33,6 +36,9 @@
                 } else {
                     console.log(self.is + ' fetched data succesfully.');
                     self.value = self.postProcess(data);
+                    this.fire('pv-fetch-end', {
+                        url: csvUrl
+                    });
                 }
             });
         }

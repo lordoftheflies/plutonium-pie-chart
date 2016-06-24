@@ -5,7 +5,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
     "d3": "^3.5.17",
-    "paper-input": "^1.1.12"
+    "paper-input": "^1.1.12",
+    "paper-spinner": "polymerelements/paper-spinner#^1.2.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
