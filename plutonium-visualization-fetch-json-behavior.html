@@ -1,0 +1,40 @@
+<script src="../d3/d3.js"></script>
+
+<script>
+    window.PlutoniumVisualization = window.PlutoniumVisualization || {};
+    /**
+     * Behavior for fetching model from JSON from an URL.
+     *
+     * @polymerBehavior
+     */
+    PlutoniumVisualization.FetchJsonBehavior = {
+        properties: {
+            json: {
+                type: String,
+                notify: true,
+                observer: 'observeJson'
+            }
+        },
+        listeners: {
+            'pv-fetch-json': 'onJsonFetch'
+        },
+        observeJson: function (jsonUrl) {
+            console.log(this.is, 'observe json.');
+            this.fire('pv-fetch-json', {
+                url: jsonUrl
+            });
+        },
+        onJsonFetch: function (event, detail) {
+            console.log(this.is, 'fetch from', detail.url, '...');
+            var self = this;
+            d3.json(detail.url, function (error, data) {
+                if (error) {
+                    throw error;
+                } else {
+                    console.log(self.is + ' fetched data succesfully.');
+                    self.value = self.postProcess(data);
+                }
+            });
+        }
+    };
+</script>

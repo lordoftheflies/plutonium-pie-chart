@@ -1,0 +1,34 @@
+<script src="../d3/d3.js"></script>
+
+<link rel="import" href="plutonium-visualization-fetch-csv-behavior.html">
+<link rel="import" href="plutonium-visualization-fetch-json-behavior.html">
+<link rel="import" href="plutonium-visualization-fetch-tsv-behavior.html">
+
+<script>
+    window.PlutoniumVisualization = window.PlutoniumVisualization || {};
+    /**
+     * Behavior for fetching model from JSON from an URL.
+     *
+     * @polymerBehavior
+     */
+    PlutoniumVisualization.FetchBehavior = {
+        postProcess: function (data) {
+            var self = this;
+            data.forEach(function (d) {
+                d.date = self._parseDate(d.date);
+                d.close = +d.close;
+            });
+            return data;
+        }
+    };
+    /**
+     * Behavior for fetching model from JSON from an URL.
+     *
+     * @polymerBehavior
+     */
+    PlutoniumVisualization.FetchUniversalBehavior = [
+        PlutoniumVisualization.FetchCsvBehavior,
+        PlutoniumVisualization.FetchJsonBehavior,
+        PlutoniumVisualization.FetchTsvBehavior
+    ];
+</script>

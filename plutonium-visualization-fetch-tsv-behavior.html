@@ -1,0 +1,42 @@
+<script src="../d3/d3.js"></script>
+
+<link rel="import" href="plutonium-visualization-fetching-behavior.html">
+
+<script>
+    window.PlutoniumVisualization = window.PlutoniumVisualization || {};
+    /**
+     * Behavior for fetching model from CSV from an URL.
+     *
+     * @polymerBehavior
+     */
+    PlutoniumVisualization.FetchTsvBehavior = {
+        properties: {
+            tsv: {
+                type: String,
+                notify: true,
+                observer: 'observeTsv'
+            }
+        },
+        listeners: {
+            'pv-fetch-tsv': 'onTsvFetch'
+        },
+        observeTsv: function (tsvUrl) {
+            console.log(this.is, 'observe tsv.');
+            this.fire('pv-fetch-tsv', {
+                url: tsvUrl
+            });
+        },
+        onTsvFetch: function (event, detail) {
+            console.log(this.is, 'fetch from', detail.url, '...');
+            var self = this;
+            d3.tsv(detail.url, function (error, data) {
+                if (error) {
+                    throw error;
+                } else {
+                    console.log(self.is + ' fetched data succesfully.');
+                    self.value = self.postProcess(data);
+                }
+            });
+        }
+    };
+</script>

@@ -1,9 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <script src="../d3/d3.js"></script>
 
-<link rel="import" href="plutonium-visualization-presentation-behavior.html">
-<link rel="import" href="plutonium-visualization-object-model-behavior.html">
-<link rel="import" href="plutonium-visualization-json-model-behavior.html">
+<link rel="import" href="plutonium-visualization-fetch-behavior.html">
 
 <dom-module id="plutonium-area-chart">
     <template>
@@ -57,16 +55,6 @@
                 _height: {
                     type: Number,
                     notify: true
-                },
-                json: {
-                    type: String,
-                    notify: true,
-                    observer: 'observeJson'
-                },
-                tsv: {
-                    type: String,
-                    notify: true,
-                    observer: 'observeTsv'
                 },
                 value: {
                     type: Object,
@@ -180,43 +168,7 @@
                         .attr("dy", ".71em")
                         .style("text-anchor", "end")
                         .text("Price ($)");
-            },
-            observeJson: function (jsonUrl) {
-                console.log(this.is, 'observe json.');
-                this.fire('pv-fetch-json', {
-                    url: jsonUrl
-                });
-            },
-            onJsonFetch: function (event, detail) {
-                console.log(this.is, 'fetch from', detail.url, '...');
-                var self = this;
-                d3.json(detail.url, function (error, data) {
-                    if (error) {
-                        throw error;
-                    } else {
-                        console.log(self.is + ' fetched data succesfully.');
-                        self.value = self.postProcess(data);
-                    }
-                });
-            },
-            observeTsv: function (tsvUrl) {
-                console.log(this.is, 'observe tsv.');
-                this.fire('pv-fetch-tsv', {
-                    url: tsvUrl
-                });
-            },
-            onTsvFetch: function (event, detail) {
-                console.log(this.is, 'fetch from', detail.url, '...');
-                var self = this;
-                d3.tsv(detail.url, function (error, data) {
-                    if (error) {
-                        throw error;
-                    } else {
-                        console.log(self.is + ' fetched data succesfully.');
-                        self.value = self.postProcess(data);
-                    }
-                });
-            },
+            }
             
         });
     </script>
