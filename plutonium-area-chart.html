@@ -42,6 +42,22 @@
             is: 'plutonium-area-chart',
             extend: 'svg',
             properties: {
+                width: {
+                    type: Number,
+                    notify: true
+                },
+                height: {
+                    type: Number,
+                    notify: true
+                },
+                _width: {
+                    type: Number,
+                    notify: true
+                },
+                _height: {
+                    type: Number,
+                    notify: true
+                },
                 json: {
                     type: String,
                     notify: true,
@@ -51,11 +67,6 @@
                     type: String,
                     notify: true,
                     observer: 'observeTsv'
-                },
-                csv: {
-                    type: String,
-                    notify: true,
-                    observer: 'observeCsv'
                 },
                 value: {
                     type: Object,
@@ -73,26 +84,103 @@
             listeners: {
                 'pv-fetch-json': 'onJsonFetch',
                 'pv-fetch-tsv': 'onTsvFetch',
-                'pv-fetch-csv': 'onCsvFetch'
+                'pv-fetch-csv': 'onCsvFetch',
+                'pv-render-area': 'onRenderArea'
             },
             created: function () {
                 console.log(this.is, 'created.');
             },
             ready: function () {
                 console.log(this.is, 'ready.');
+
             },
             attached: function () {
                 console.log(this.is, 'attached.');
+                this.setup();
             },
             detached: function () {
                 console.log(this.is, 'detached.');
             },
-            
-            observeValue: function(value) {
+            observeValue: function (value) {
                 console.log(this.is, 'observe value.');
-                
+                this.fire('pv-render-area', {
+                });
             },
-        
+            setup: function () {
+                console.log(this.is, 'setup.');
+                var margin = {top: 20, right: 20, bottom: 30, left: 50};
+                this._width = this.width - margin.left - margin.right;
+                this._height = this.height - margin.top - margin.bottom;
+
+                this._parseDate = d3.time.format("%d-%b-%y").parse;
+
+                this._x = d3.time.scale().range([0, this._width]);
+                this._xAxis = d3.svg.axis().scale(this._x).orient("bottom");
+
+                this._y = d3.scale.linear().range([this._height, 0]);
+                this._yAxis = d3.svg.axis().scale(this._y).orient("left");
+
+                var self = this;
+                this._area = d3.svg.area()
+                        .x(function (d) {
+                            return self._x(d.date);
+                        })
+                        .y0(this._height)
+                        .y1(function (d) {
+                            return self._y(d.close);
+                        });
+
+                d3.select(this.$.canvas)
+                        .attr("width", this._width + margin.left + margin.right)
+                        .attr("height", this._height + margin.top + margin.bottom);
+
+                d3.select(this.$.transformer)
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            },
+            postProcess: function (data) {
+                var self = this;
+                data.forEach(function (d) {
+                    d.date = self._parseDate(d.date);
+                    d.close = +d.close;
+                });
+                return data;
+            },
+            onRenderArea: function (event, detail) {
+                console.log(this.is, 'render as area');
+
+                if (this._x === undefined) {
+                    return;
+                }
+
+                this._x.domain(d3.extent(this.value, function (d) {
+                    return d.date;
+                }));
+                this._y.domain([0, d3.max(this.value, function (d) {
+                        return d.close;
+                    })]);
+
+                var g = d3.select(this.$.transformer);
+
+                g.append("path")
+                        .datum(this.value)
+                        .attr("class", "area")
+                        .attr("d", this._area);
+
+                g.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + this._height + ")")
+                        .call(this._xAxis);
+
+                g.append("g")
+                        .attr("class", "y axis")
+                        .call(this._yAxis)
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "end")
+                        .text("Price ($)");
+            },
             observeJson: function (jsonUrl) {
                 console.log(this.is, 'observe json.');
                 this.fire('pv-fetch-json', {
@@ -107,11 +195,10 @@
                         throw error;
                     } else {
                         console.log(self.is + ' fetched data succesfully.');
-                        self.value = data;
+                        self.value = self.postProcess(data);
                     }
                 });
             },
-            
             observeTsv: function (tsvUrl) {
                 console.log(this.is, 'observe tsv.');
                 this.fire('pv-fetch-tsv', {
@@ -126,29 +213,11 @@
                         throw error;
                     } else {
                         console.log(self.is + ' fetched data succesfully.');
-                        self.value = data;
+                        self.value = self.postProcess(data);
                     }
                 });
             },
             
-            observeCsv: function (csvUrl) {
-                console.log(this.is, 'observe csv.');
-                this.fire('pv-fetch-csv', {
-                    url: csvUrl
-                });
-            },
-            onCsvFetch: function (event, detail) {
-                console.log(this.is, 'fetch from', detail.url, '...');
-                var self = this;
-                d3.csv(detail.url, function (error, data) {
-                    if (error) {
-                        throw error;
-                    } else {
-                        console.log(self.is + ' fetched data succesfully.');
-                        self.value = data;
-                    }
-                });
-            }
         });
     </script>
 </dom-module>

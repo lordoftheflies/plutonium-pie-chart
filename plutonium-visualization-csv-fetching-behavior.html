@@ -9,40 +9,35 @@
      *
      * @polymerBehavior
      */
-    PlutoniumVisualization.CsvFetchingBehaviorImp = {
+    PlutoniumVisualization.CsvFetchingBehavior = {
         properties: {
-            csvUrl: {
+            csv: {
                 type: String,
-                notify: true
+                notify: true,
+                observer: 'observeCsv'
             }
         },
-        observers: [
-            'observeCsvUrl(csvUrl)'
-        ],
-        /**
-         * Observe `data` object..
-         *
-         * @param {string} Label expression.
-         * @param {function} Function to generate D3 layout.
-         * @param {Object} Model object.
-         */
-        observeCsvUrl: function (csvUrl) {
-            console.log(this.is, ' use CSV model from: ', csvUrl);
-            this.fire('plutonium-fetch', {
+        listeners: {
+            'pv-fetch-csv': 'onCsvFetch'
+        },
+        observeCsv: function (csvUrl) {
+            console.log(this.is, 'observe csv.');
+            this.fire('pv-fetch-csv', {
                 url: csvUrl
             });
         },
-        
-        _fetch: function (csvUrl, postFetch) {
-            d3.csv(csvUrl, postFetch);
+        onCsvFetch: function (event, detail) {
+            console.log(this.is, 'fetch from', detail.url, '...');
+            var self = this;
+            d3.csv(detail.url, function (error, data) {
+                if (error) {
+                    throw error;
+                } else {
+                    console.log(self.is + ' fetched data succesfully.');
+                    self.value = self.postProcess(data);
+                }
+            });
         }
 
     };
-
-    /**
-     * Behavior for fetching model from JSON from an URL.
-     *
-     * @polymerBehavior
-     */
-    PlutoniumVisualization.CsvFetchingBehavior = [PlutoniumVisualization.FetchingBehavior, PlutoniumVisualization.CsvFetchingBehaviorImp];
 </script>

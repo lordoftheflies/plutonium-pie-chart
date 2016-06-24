@@ -1,44 +1,56 @@
 <!doctype html>
 <html>
-  <head>
-    <title>plutonium-pie-chart demo</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <head>
+        <title>plutonium-pie-chart demo</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+        <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+        <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+        <link rel="import" href="../../paper-input/paper-textarea.html">
 
-    <link rel="import" href="../plutonium-area-chart.html">
+        <link rel="import" href="../plutonium-area-chart.html">
 
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
-  </head>
-  <body>
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
+    </head>
+    <body>
 
-    <div class="vertical-section-container centered">
-      <h3>Basic plutonium-chart Demo</h3>
-      <demo-snippet>
-        <template>
-<!--          <svg is="plutonium-area-chart" 
-              width="300" 
-              height="300" 
-              attr-for-label="age" 
-              attr-for-selected="population" 
-              data-url="./plutonium-area-data.json">
-          </svg>-->
-          <plutonium-area-chart 
-              width="300" 
-              height="300" 
-              attr-for-label="age" 
-              attr-for-selected="population" 
-              json="./plutonium-area-data.json">
-<!--              tsv="./plutonium-area-data.tsv"
-              csv="./plutonium-area-data.csv">-->
-          </plutonium-area-chart>
-        </template>
-      </demo-snippet>
-    </div>
+        <div class="vertical-section-container centered">
+            <h3>Basic plutonium-chart Demo</h3>
+            <demo-snippet>
+                <template>
+                    <!--          <svg is="plutonium-area-chart" 
+                                  width="300" 
+                                  height="300" 
+                                  attr-for-label="age" 
+                                  attr-for-selected="population" 
+                                  data-url="./plutonium-area-data.json">
+                              </svg>-->
+                    <plutonium-area-chart 
+                        width="300" 
+                        height="300" 
+                        attr-for-label="age" 
+                        attr-for-selected="population" 
+                        json="./plutonium-area-data.json"
+                        >
+                        <!--              tsv="./plutonium-area-data.tsv"
+                                      csv="./plutonium-area-data.csv">-->
+                    </plutonium-area-chart>
+                    <plutonium-area-chart 
+                        width="1000" 
+                        height="600" 
+                        attr-for-label="age" 
+                        attr-for-selected="population" 
+                        tsv="./plutonium-area-data.tsv"
+                        >
+                        <!--              tsv="./plutonium-area-data.tsv"
+                                      csv="./plutonium-area-data.csv">-->
+                    </plutonium-area-chart>
+                </template>
+            </demo-snippet>
+        </div>
 
-  </body>
+    </body>
 </html>

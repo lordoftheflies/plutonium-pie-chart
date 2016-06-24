@@ -4,7 +4,8 @@
   "main": "plutonium-pie-chart.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
-    "d3": "^3.5.17"
+    "d3": "^3.5.17",
+    "paper-input": "^1.1.12"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
