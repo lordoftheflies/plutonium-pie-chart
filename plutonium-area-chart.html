@@ -1,7 +1,11 @@
 <link rel="import" href="../polymer/polymer.html">
 <script src="../d3/d3.js"></script>
 
-<dom-module id="plutonium-pie-chart">
+<link rel="import" href="plutonium-visualization-presentation-behavior.html">
+<link rel="import" href="plutonium-visualization-object-model-behavior.html">
+<link rel="import" href="plutonium-visualization-json-model-behavior.html">
+
+<dom-module id="plutonium-area-chart">
     <template>
         <style>
             :host {
@@ -14,27 +18,30 @@
     </template>
     <script>
         /**
-         * `<plutonium-pie-chart>` is a D3 based svg chart.
+         * `<plutonium-area-chart>` is a D3 based svg chart.
          *
-         * In typical use, just slap some `<plutonium-pie-chart>`:
+         * In typical use, just slap some `<plutonium-area-chart>`:
          *
-         *     <plutonium-pie-chart 
+         *     <plutonium-area-chart 
          *     width="300" 
          *     height="300" 
          *     attr-for-label="age" 
          *     attr-for-selected="population" 
          *     data-url="./data.json">
-         *     </plutonium-pie-chart>
+         *     </plutonium-area-chart>
          *
          * Plutonium visualization elements always working with JSON and plain JS.
          * 
          * @hero hero
-         * @demo demo/index-plutonium-pie-chart.html  Super cool demo, with sharks!
+         * @demo demo/index-plutonium-area-chart.html  Super cool demo, with sharks!
          */
 
         Polymer({
-            is: 'plutonium-pie-chart',
+            is: 'plutonium-area-chart',
             behaviors: [
+                PlutoniumVisualization.JsonModelBehavior,
+                PlutoniumVisualization.ObjectModelBehavior,
+                PlutoniumVisualization.PresentationBehavior
             ],
 //            extends: 'svg',
             properties: {
@@ -102,16 +109,6 @@
                     type: String,
                     notify: true,
                     value: 'name'
-                },
-                /**
-                 * Metadata describing what has been made awesome on the page.
-                 *
-                 * @type {{elements: Array<HTMLElement>, level: number}}
-                 */
-                items: {
-                    type: Array,
-                    notify: true,
-                    value: ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]
                 },
                 /**
                  * Metadata describing what has been made awesome on the page.

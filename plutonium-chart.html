@@ -1,6 +1,10 @@
 <link rel="import" href="../polymer/polymer.html">
 <script src="../d3/d3.js"></script>
 
+<link rel="import" href="plutonium-visualization-presentation-behavior.html">
+<link rel="import" href="plutonium-visualization-object-model-behavior.html">
+<link rel="import" href="plutonium-visualization-json-model-behavior.html">
+
 <dom-module id="plutonium-chart">
     <template>
         <style>
@@ -29,14 +33,15 @@
          * Plutonium visualization elements always working with JSON and plain JS.
          * 
          * @hero hero
-         * @demo demo/index.html  Super cool demo, with sharks!
+         * @demo demo/index-plutonium-chart.html  Super cool demo, with sharks!
          */
 
         Polymer({
             is: 'plutonium-chart',
             behaviors: [
                 PlutoniumVisualization.JsonModelBehavior,
-                PlutoniumVisualization.ObjectModelBehavior
+                PlutoniumVisualization.ObjectModelBehavior,
+                PlutoniumVisualization.PresentationBehavior
             ],
 //            extends: 'svg',
             properties: {
