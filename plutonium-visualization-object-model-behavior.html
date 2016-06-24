@@ -1,0 +1,35 @@
+<script src="../d3/d3.js"></script>
+
+<script>
+    window.PlutoniumVisualization = window.PlutoniumVisualization || {};
+    /**
+     * Behavior for using browser memory model.
+     *
+     * @polymerBehavior
+     */
+    PlutoniumVisualization.ObjectModelBehavior = {
+        properties: {
+            data: {
+                type: Object,
+                notify: true
+            }
+        },
+        observers: [
+            'observeData(data)'
+        ],
+        created: function () {
+            console.log('Initialize ', this, ' with object-model.');
+        },
+        /**
+         * Observe `data` object..
+         *
+         * @param {string} Label expression.
+         * @param {function} Function to generate D3 layout.
+         * @param {Object} Model object.
+         */
+        observeData: function (data) {
+            console.log(this, ' observe data: ', JSON.stringify(data));
+        }
+
+    };
+</script>
