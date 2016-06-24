@@ -7,18 +7,9 @@
      *
      * @polymerBehavior
      */
-    PlutoniumVisualization.JsonModelBehavior = {
-        properties: {
-            jsonUrl: {
-                type: String,
-                notify: true
-            }
-        },
-        observers: [
-            'observeDataUrl(jsonUrl)'
-        ],
-        created: function () {
-            console.log('Initialize ', this, ' with json-model.');
+    PlutoniumVisualization.FetchingBehavior = {
+        listeners: {
+            'plutonium-fetch': '_onFetch'
         },
         _postFetch: function (error, data) {
             if (error) {
@@ -35,10 +26,9 @@
          * @param {function} Function to generate D3 layout.
          * @param {Object} Model object.
          */
-        observeDataUrl: function (jsonUrl) {
+        _onFetch: function (event, detail) {
             console.log(this.is + ' fetching data ...');
-            d3.json(jsonUrl, this.postFetch);
+            this._fetch(detail.url, this._postFetch);
         }
-
     };
 </script>

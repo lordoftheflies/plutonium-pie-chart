@@ -9,16 +9,16 @@
      */
     PlutoniumVisualization.ObjectModelBehavior = {
         properties: {
-            data: {
+            value: {
                 type: Object,
                 notify: true
             }
         },
         observers: [
-            'observeData(data)'
+            'observeData(value)'
         ],
         created: function () {
-            console.log('Initialize ', this, ' with object-model.');
+            console.log(this.is, ' initialize object-model.');
         },
         /**
          * Observe `data` object..
@@ -27,8 +27,8 @@
          * @param {function} Function to generate D3 layout.
          * @param {Object} Model object.
          */
-        observeData: function (data) {
-            console.log(this, ' observe data: ', JSON.stringify(data));
+        observeData: function (value) {
+            console.log(this.is, ' observe data: ', JSON.stringify(value));
         }
 
     };
