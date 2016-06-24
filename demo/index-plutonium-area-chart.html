@@ -9,7 +9,7 @@
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 
-    <link rel="import" href="../plutonium-chart.html">
+    <link rel="import" href="../plutonium-area-chart.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
@@ -20,7 +20,22 @@
       <h3>Basic plutonium-chart Demo</h3>
       <demo-snippet>
         <template>
-          <plutonium-chart width="300" height="300" attr-for-label="age" attr-for-selected="population" data-url="./plutonium-area-data.json"></plutonium-chart>
+<!--          <svg is="plutonium-area-chart" 
+              width="300" 
+              height="300" 
+              attr-for-label="age" 
+              attr-for-selected="population" 
+              data-url="./plutonium-area-data.json">
+          </svg>-->
+          <plutonium-area-chart 
+              width="300" 
+              height="300" 
+              attr-for-label="age" 
+              attr-for-selected="population" 
+              json="./plutonium-area-data.json">
+<!--              tsv="./plutonium-area-data.tsv"
+              csv="./plutonium-area-data.csv">-->
+          </plutonium-area-chart>
         </template>
       </demo-snippet>
     </div>

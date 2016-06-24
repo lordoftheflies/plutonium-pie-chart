@@ -9,11 +9,13 @@
     <template>
         <style>
             :host {
-                display: block;
+                display: inline-block;
             }
         </style>
         <svg id="canvas">
-        <g id="transformer"></g>
+        <g id="transformer">
+        <content></content>
+        </g>
         </svg>
     </template>
     <script>
@@ -38,11 +40,115 @@
 
         Polymer({
             is: 'plutonium-area-chart',
+            extend: 'svg',
+            properties: {
+                json: {
+                    type: String,
+                    notify: true,
+                    observer: 'observeJson'
+                },
+                tsv: {
+                    type: String,
+                    notify: true,
+                    observer: 'observeTsv'
+                },
+                csv: {
+                    type: String,
+                    notify: true,
+                    observer: 'observeCsv'
+                },
+                value: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            observers: [
+                'observeValue(value)'
+            ],
             behaviors: [
-                PlutoniumVisualization.JsonModelBehavior,
-                PlutoniumVisualization.ObjectModelBehavior,
-                PlutoniumVisualization.PresentationBehavior
-            ]
+//                PlutoniumVisualization.JsonModelBehavior,
+//                PlutoniumVisualization.ObjectModelBehavior,
+//                PlutoniumVisualization.PresentationBehavior
+            ],
+            listeners: {
+                'pv-fetch-json': 'onJsonFetch',
+                'pv-fetch-tsv': 'onTsvFetch',
+                'pv-fetch-csv': 'onCsvFetch'
+            },
+            created: function () {
+                console.log(this.is, 'created.');
+            },
+            ready: function () {
+                console.log(this.is, 'ready.');
+            },
+            attached: function () {
+                console.log(this.is, 'attached.');
+            },
+            detached: function () {
+                console.log(this.is, 'detached.');
+            },
+            
+            observeValue: function(value) {
+                console.log(this.is, 'observe value.');
+                
+            },
+        
+            observeJson: function (jsonUrl) {
+                console.log(this.is, 'observe json.');
+                this.fire('pv-fetch-json', {
+                    url: jsonUrl
+                });
+            },
+            onJsonFetch: function (event, detail) {
+                console.log(this.is, 'fetch from', detail.url, '...');
+                var self = this;
+                d3.json(detail.url, function (error, data) {
+                    if (error) {
+                        throw error;
+                    } else {
+                        console.log(self.is + ' fetched data succesfully.');
+                        self.value = data;
+                    }
+                });
+            },
+            
+            observeTsv: function (tsvUrl) {
+                console.log(this.is, 'observe tsv.');
+                this.fire('pv-fetch-tsv', {
+                    url: tsvUrl
+                });
+            },
+            onTsvFetch: function (event, detail) {
+                console.log(this.is, 'fetch from', detail.url, '...');
+                var self = this;
+                d3.tsv(detail.url, function (error, data) {
+                    if (error) {
+                        throw error;
+                    } else {
+                        console.log(self.is + ' fetched data succesfully.');
+                        self.value = data;
+                    }
+                });
+            },
+            
+            observeCsv: function (csvUrl) {
+                console.log(this.is, 'observe csv.');
+                this.fire('pv-fetch-csv', {
+                    url: csvUrl
+                });
+            },
+            onCsvFetch: function (event, detail) {
+                console.log(this.is, 'fetch from', detail.url, '...');
+                var self = this;
+                d3.csv(detail.url, function (error, data) {
+                    if (error) {
+                        throw error;
+                    } else {
+                        console.log(self.is + ' fetched data succesfully.');
+                        self.value = data;
+                    }
+                });
+            }
         });
     </script>
 </dom-module>
