@@ -1,0 +1,49 @@
+<script src="../d3/d3.js"></script>
+
+<script>
+    window.PlutoniumVisualization = window.PlutoniumVisualization || {};
+    /**
+     * Behavior for presentation of the data.
+     *
+     * @polymerBehavior
+     */
+    PlutoniumVisualization.PresentationBehavior = {
+        properties: {
+            /**
+             * Colors of visualized data.
+             *
+             * @type {{elements: Array<HTMLElement>, level: number}}
+             */
+            items: {
+                type: Array,
+                notify: true,
+                value: ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]
+            },
+            /**
+             * Palette for colors of visualized data.
+             *
+             * @type {{elements: Array<HTMLElement>, level: number}}
+             */
+            _palette: {
+                type: Object,
+                notify: true
+            }
+        },
+        observers: [
+            'observeItems(items)'
+        ],
+        created: function () {
+            console.log('Initialize ', this, ' presentation.');
+        },
+        /**
+         * Observe `items` object, and synchronize palette for.
+         *
+         * @param {Array<string>} Color items.
+         * 
+         */
+        observeItems: function (items) {
+            console.log(this, ' observe items: ', JSON.stringify(items));
+        }
+
+    };
+</script>
