@@ -1,0 +1,73 @@
+<link rel="import" href="../polymer/polymer.html">
+<script src="../d3/d3.js"></script>
+
+<dom-module id="plutonium-vertical-axis">
+    <template>
+        <style>
+            :host {
+            }
+        </style>
+    </template>
+    <script>
+        /**
+         * `<plutonium-vertical-axis>` is a D3 based svg chart.
+         *
+         * In typical use, just slap some `<plutonium-vertical-axis>`:
+         *
+         *     <plutonium-vertical-axis 
+         *     width="300" 
+         *     height="300" 
+         *     attr-for-label="age" 
+         *     attr-for-selected="population" 
+         *     data-url="./data.json">
+         *     </plutonium-vertical-axis>
+         *
+         * Plutonium visualization elements always working with JSON and plain JS.
+         * 
+         * @hero hero
+         * @demo demo/index-plutonium-vertical-axis.html  Super cool demo, with sharks!
+         */
+
+        Polymer({
+            is: 'plutonium-vertical-axis',
+            behaviors: [
+            ],
+//            extends: 'svg',
+            properties: {
+                title: {
+                    type: String,
+                    notify: true
+                },
+                height: {
+                    type: Number,
+                    notify: true
+                },
+                orient: {
+                    type: String,
+                    notify: true,
+                    value: 'right'
+                }
+            },
+            attached: function () {
+                this._volume = d3.scale.linear().range([this.height, 0]);
+                this._axis = d3.svg.axis().scale(this._volume).orient(this.orient);
+                var g = d3.select(Polymer.dom(this).parentNode.$.transformer);
+                g.append("g")
+                        .attr("id", "verticalAxis")
+                        .attr("class", "y axis")
+                        .call(this._axis)
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "end")
+                        .text(this.title);
+            },
+            detached: function () {
+                var childG = Polymer.dom(this).parentNode.$.transformer.$.verticalAxis;
+                var parentG = Polymer.dom(this).parentNode.$.transformer;
+                Polymer.dom(parentG).removeChild(childG);
+            }
+        });
+    </script>
+</dom-module>

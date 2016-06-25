@@ -1,19 +1,18 @@
 [
     {
-        "name": "kasdjaksdj",
-        "age": 10,
-        "population": 40000
+        "date": "1-May-12",
+        "close": 582.13
     },
     {
-        
-        "name": "kasdjaksdasdasdadj",
-        "age": 20,
-        "population": 80000
+        "date": "30-Apr-12",
+        "close": 583.98
     },
     {
-        
-        "name": "kasdja",
-        "age": 30,
-        "population": 120000
+        "date": "27-Apr-12",
+        "close": 603.00
+    },
+    {
+        "date": "26-Apr-12",
+        "close": 607.70
     }
 ]

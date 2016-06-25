@@ -1,0 +1,74 @@
+<link rel="import" href="../polymer/polymer.html">
+<script src="../d3/d3.js"></script>
+
+<dom-module id="plutonium-area-layout">
+    <template>
+        <style>
+            :host {
+            }
+        </style>
+
+    </template>
+    <script>
+        /**
+         * `<plutonium-area-layout>` is a D3 based svg chart.
+         *
+         * In typical use, just slap some `<plutonium-area-layout>`:
+         *
+         *     <plutonium-area-layout 
+         *     width="300" 
+         *     height="300" 
+         *     attr-for-label="age" 
+         *     attr-for-selected="population" 
+         *     data-url="./data.json">
+         *     </plutonium-area-layout>
+         *
+         * Plutonium visualization elements always working with JSON and plain JS.
+         * 
+         * @hero hero
+         * @demo demo/index-plutonium-area-layout.html  Super cool demo, with sharks!
+         */
+
+        Polymer({
+            is: 'plutonium-area-layout',
+            behaviors: [
+            ],
+//            extends: 'svg',
+            properties: {
+                attrForX: {
+                    type: String,
+                    notify: true,
+                    value: 'date'
+                },
+                attrForY: {
+                    type: String,
+                    notify: true,
+                    value: 'close'
+                }
+            },
+            setup: function () {
+                console.log(this.is, 'setup.');
+                var selfY = Polymer.dom(this).parentNode.$.transformer.$.verticalAxis;
+                var selfX = Polymer.dom(this).parentNode.$.transformer.$.horizontalAxis;
+                var self = this;
+                this._area = d3.svg.area()
+                        .x(function (d) {
+                            return selfX._volume(d[self.attrForX]);
+                        })
+                        .y0(Polymer.dom(this).parentNode._height)
+                        .y1(function (d) {
+                            return selfY._volume(d[self.attrForY]);
+                        });
+            },
+            render: function () {
+                console.log(this.is, 'render.');
+                var g = d3.select(Polymer.dom(this).parentNode.$.transformer);
+
+                g.append("path")
+                        .datum(Polymer.dom(this).parentNode.value)
+                        .attr("class", "area")
+                        .attr("d", this._area);
+            }
+        });
+    </script>
+</dom-module>

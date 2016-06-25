@@ -1,0 +1,79 @@
+<link rel="import" href="../polymer/polymer.html">
+<script src="../d3/d3.js"></script>
+
+<dom-module id="plutonium-pie-layout">
+    <template>
+        <style>
+            :host {
+            }
+        </style>
+
+    </template>
+    <script>
+        /**
+         * `<plutonium-pie-layout>` is a D3 based svg chart.
+         *
+         * In typical use, just slap some `<plutonium-pie-layout>`:
+         *
+         *     <plutonium-pie-layout 
+         *     width="300" 
+         *     height="300" 
+         *     attr-for-label="age" 
+         *     attr-for-selected="population" 
+         *     data-url="./data.json">
+         *     </plutonium-pie-layout>
+         *
+         * Plutonium visualization elements always working with JSON and plain JS.
+         * 
+         * @hero hero
+         * @demo demo/index-plutonium-pie-layout.html  Super cool demo, with sharks!
+         */
+
+        Polymer({
+            is: 'plutonium-pie-layout',
+            behaviors: [
+            ],
+//            extends: 'svg',
+            properties: {
+                title: {
+                    type: String,
+                    notify: true
+                },
+                width: {
+                    type: Number,
+                    notify: true
+                },
+                height: {
+                    type: Number,
+                    notify: true
+                },
+                orient: {
+                    type: String,
+                    notify: true,
+                    value: 'bottom'
+                }
+            },
+            attached: function () {
+
+                this._volume = d3.time.scale().range([0, this.width]);
+                this._axis = d3.svg.axis().scale(this._volume).orient(this.orient);
+                var g = d3.select(Polymer.dom(this).parentNode.$.transformer);
+                g.append("g")
+                        .attr("id", "horizontalAxis")
+                        .attr("class", "x axis")
+//                        .attr("transform", "translate(0," + this.height + ")")
+                        .call(this._axis)
+                        .append("text")
+                        .attr("y", 12)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "left")
+                        .text(this.title);
+            },
+            detached: function () {
+                var childG = Polymer.dom(this).parentNode.$.transformer.$.horizontalAxis;
+                var parentG = Polymer.dom(this).parentNode.$.transformer;
+                Polymer.dom(parentG).removeChild(childG);
+            }
+        });
+    </script>
+</dom-module>
