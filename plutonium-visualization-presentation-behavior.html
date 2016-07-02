@@ -63,8 +63,8 @@
         observeLayout: function (_width, _height) {
             console.log(this.is, 'observe layout (', _width, ',', _height, ')');
             d3.select(this.$.canvas)
-                    .attr("width", _width + this._margin.left + this._margin.right)
-                    .attr("height", _height + this._margin.top + this._margin.bottom);
+                    .attr("width", this.width)
+                    .attr("height", this.height);
             d3.select(this.$.transformer)
                     .attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
             this.fire('pv-render', {});

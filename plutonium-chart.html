@@ -14,7 +14,7 @@
         </style>
         <content></content>
         <svg id="canvas" hidden="[[computeDisplay(loading, value)]]">
-            <g id="transformer"></g>
+        <g id="transformer"></g>
         </svg>
         <p>{{value}}</p>
         <paper-spinner-lite alt="Loading data" active="[[loading]]"></paper-spinner-lite>
@@ -52,9 +52,17 @@ Polymer({
             computed: 'computeDisplay(loading, value)'
         }
     },
-    computeDisplay: function(loading, value) {
+    computeDisplay: function (loading, value) {
         console.log('Display: ', !loading && (value !== undefined || value === null));
         return !(!loading && (value !== undefined || value === null));
+    },
+    postProcess: function (data) {
+        var parseDate = d3.time.format("%d-%b-%y").parse;
+        data.forEach(function (d) {
+            d.date = parseDate(d.date);
+            d.close = +d.close;
+        });
+        return data;
     }
 });
     </script>

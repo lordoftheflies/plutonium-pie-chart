@@ -49,7 +49,7 @@
                 }
             },
             attached: function () {
-                this._volume = d3.scale.linear().range([this.height, 0]);
+                this._volume = d3.scale.linear().range([Polymer.dom(this).parentNode._height, 0]);
                 this._axis = d3.svg.axis().scale(this._volume).orient(this.orient);
                 var g = d3.select(Polymer.dom(this).parentNode.$.transformer);
                 g.append("g")

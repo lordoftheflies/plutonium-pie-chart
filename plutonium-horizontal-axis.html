@@ -1,9 +1,10 @@
 <link rel="import" href="../polymer/polymer.html">
 <script src="../d3/d3.js"></script>
+<link rel="import" href="plutonium-visualization-styles.html">
 
 <dom-module id="plutonium-horizontal-axis">
     <template>
-        <style>
+        <style include="plutonium-visualization-styles">
             :host {
             }
         </style>
@@ -54,17 +55,16 @@
                 }
             },
             attached: function () {
-
-                this._volume = d3.time.scale().range([0, this.width]);
+                this._volume = d3.time.scale().range([0, Polymer.dom(this).parentNode._width]);
                 this._axis = d3.svg.axis().scale(this._volume).orient(this.orient);
                 var g = d3.select(Polymer.dom(this).parentNode.$.transformer);
                 g.append("g")
                         .attr("id", "horizontalAxis")
                         .attr("class", "x axis")
-//                        .attr("transform", "translate(0," + this.height + ")")
+                        .attr("transform", "translate(0," + Polymer.dom(this).parentNode._height + ")")
                         .call(this._axis)
                         .append("text")
-                        .attr("y", 12)
+                        .attr("y", 25)
                         .attr("dy", ".71em")
                         .style("text-anchor", "left")
                         .text(this.title);
@@ -73,6 +73,9 @@
                 var childG = Polymer.dom(this).parentNode.$.transformer.$.horizontalAxis;
                 var parentG = Polymer.dom(this).parentNode.$.transformer;
                 Polymer.dom(parentG).removeChild(childG);
+            },
+            rendered: function() {
+                this._volume.domain(d3.extent(Polymer.dom(this).parentNode.value, function(d) { return d.date; }));
             }
         });
     </script>
